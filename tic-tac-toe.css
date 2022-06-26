@@ -20,9 +20,13 @@ form {
 input {
   border-radius: 8px;
   width: 250px;
-  height: 18px;
+  height: 24px;
   border: 1px solid rgb(172, 172, 172);
   align-self: center;
+  font-size: 14px;
+}
+label {
+  font-size: 16px;
 }
 input:focus {
   outline: 1px solid #3b82f6;
@@ -31,9 +35,10 @@ input:focus {
   background-color: #4ade80;
   border: none;
   width: 150px;
-  height: 30px;
+  height: 45px;
   border-radius: 10px;
   align-self: center;
+  font-size: 18px;
 }
 .start:hover {
   background-color: #67f89c;
@@ -41,7 +46,7 @@ input:focus {
 }
 .game-board {
   display: grid;
-  grid-template-columns: repeat(3, 100px);
+  grid-template-columns: repeat(3, 130px);
 }
 .game {
   display: none;
@@ -52,12 +57,31 @@ input:focus {
 .marker {
   box-sizing: border-box;
   border: 1px solid black;
-  font-size: 50px;
-  width: 100px;
-  height: 100px;
+  font-size: 70px;
+  font-weight: bold;
+  width: 130px;
+  height: 130px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.marker:hover {
+  transition: 0.5s;
+  background-color: rgb(233, 227, 227);
+}
+.stats {
+  display: flex;
+  justify-content: space-between;
+}
+.first,
+.second {
+  display: flex;
+  gap: 4px;
+}
+.p1,
+.p2 {
+  border-radius: 6px;
+  width: 100px;
 }
 .one,
 .two,
@@ -79,4 +103,18 @@ input:focus {
 .eight,
 .nine {
   border-right: none;
+}
+
+.restart {
+  background-color: #0f766e;
+  color: white;
+  font-size: large;
+  padding: 20px;
+  margin-top: 10px;
+}
+.back,
+.restart,
+.marker,
+.start {
+  cursor: pointer;
 }

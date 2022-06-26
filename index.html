@@ -18,7 +18,6 @@
           id="player1"
           placeholder="Name"
           value=""
-          required
         />
         <label for="player2">Player 2</label>
         <input
@@ -27,19 +26,23 @@
           id="player2"
           placeholder="Name"
           value=""
-          required
         />
-        <button
-          class="start"
-          onclick="game.submitName()
-        "
-        >
-          Start Game
-        </button>
+        <button class="start">Start Game</button>
       </form>
     </div>
     <div class="game">
-      <div class="turn">X's turn</div>
+      <div class="stats">
+        <div class="first">
+          <div class="p1">Player 1</div>
+          <div class="p1-wins">0</div>
+        </div>
+        <div class="turn"></div>
+        <div class="second">
+          <div class="p2">Player 2</div>
+          <div class="p2-wins">0</div>
+        </div>
+      </div>
+
       <div class="game-board">
         <div class="firstcol">
           <div class="marker one" id="1"></div>
@@ -58,6 +61,7 @@
         </div>
       </div>
       <button class="restart" onclick="game.restart()">Restart</button>
+      <button class="back">Go Back</button>
     </div>
   </body>
   <script src="tic-tac-toe.js"></script>
