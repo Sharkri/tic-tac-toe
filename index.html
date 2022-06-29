@@ -11,34 +11,96 @@
     <div class="home">
       <div class="header"><h1>tic-tac-toe</h1></div>
       <form onsubmit="return false;">
-        <label for="player1">Player 1</label>
-        <input
-          type="text"
-          name="player1"
-          id="player1"
-          placeholder="Name"
-          value=""
-        />
-        <label for="player2">Player 2</label>
-        <input
-          type="text"
-          name="player2"
-          id="player2"
-          placeholder="Name"
-          value=""
-        />
+        <div class="inputsform">
+          <div class="firstplayercontainer">
+            <div class="player">
+              <label for="player1">Player 1</label>
+              <input
+                type="text"
+                name="player1"
+                id="player1"
+                placeholder="Name"
+                value=""
+              />
+            </div>
+            <div class="radio">
+              <input
+                type="radio"
+                name="options1"
+                id="player1Radio"
+                required
+                checked
+              />
+              <label for="player1Radio">Player</label>
+              <input
+                type="radio"
+                name="options1"
+                id="ai1"
+                class="AI-Radio"
+                required
+              />
+              <label for="ai1">AI</label>
+            </div>
+            <div class="modes">
+              <label for="P1-Modes">Difficulty</label>
+              <select name="P1-Modes" id="P1-Modes">
+                <option value="Easy">Easy</option>
+                <option value="Hard">Hard</option>
+              </select>
+            </div>
+          </div>
+          <div class="secondplayercontainer">
+            <div class="player">
+              <label for="player2">Player 2</label>
+              <input
+                type="text"
+                name="player2"
+                id="player2"
+                placeholder="Name"
+                value=""
+              />
+            </div>
+            <div class="radio">
+              <input
+                type="radio"
+                name="options2"
+                id="player2Radio"
+                required
+                checked
+                onclick="handleRadioChoice()"
+              />
+              <label for="player2Radio">Player</label>
+              <input
+                type="radio"
+                name="options2"
+                id="ai2"
+                class="AI-Radio"
+                required
+              />
+              <label for="ai2">AI</label>
+            </div>
+            <div class="modes">
+              <label for="P2-Modes">Difficulty</label>
+              <select name="P2-Modes" id="P2-Modes">
+                <option value="Easy">Easy</option>
+                <option value="Hard">Hard</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
         <button class="start">Start Game</button>
       </form>
     </div>
     <div class="game">
       <div class="stats">
         <div class="first">
-          <div class="p1">Player 1</div>
+          <div class="p1">Player One</div>
           <div class="p1-wins">0</div>
         </div>
         <div class="turn"></div>
         <div class="second">
-          <div class="p2">Player 2</div>
+          <div class="p2">Player Two</div>
           <div class="p2-wins">0</div>
         </div>
       </div>
@@ -60,8 +122,10 @@
           <div class="marker nine" id="9"></div>
         </div>
       </div>
-      <button class="restart" onclick="game.restart()">Restart</button>
-      <button class="back">Go Back</button>
+      <div class="buttons">
+        <button class="restart" onclick="game.restart()">Restart</button>
+        <button class="back">Go Back</button>
+      </div>
     </div>
   </body>
   <script src="tic-tac-toe.js"></script>

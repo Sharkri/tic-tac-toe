@@ -7,29 +7,60 @@ body {
   flex-direction: column;
   align-items: center;
   font-family: "Montserrat", sans-serif;
+  background-color: #f3f4f6;
 }
 .header {
   font-size: 25px;
 }
-
+.home,
 form {
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+.firstplayercontainer,
+.secondplayercontainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.radio {
+  display: flex;
   gap: 8px;
 }
-input {
+.modes {
+  display: none;
+}
+.player {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+input[type="radio"] {
+  transform: scale(1.75);
+}
+input[type="text"] {
   border-radius: 8px;
-  width: 250px;
-  height: 24px;
+  width: 256px;
+  height: 32px;
   border: 1px solid rgb(172, 172, 172);
   align-self: center;
   font-size: 14px;
 }
+.inputsform {
+  width: 100vw;
+  display: flex;
+  justify-content: space-around;
+}
 label {
-  font-size: 16px;
+  font-size: 18px;
 }
 input:focus {
   outline: 1px solid #3b82f6;
+}
+input[type="radio"]:focus {
+  outline: none;
 }
 .start {
   background-color: #4ade80;
@@ -47,11 +78,14 @@ input:focus {
 .game-board {
   display: grid;
   grid-template-columns: repeat(3, 130px);
+  justify-content: center;
+  margin: 28px 0px 28px 0px;
 }
 .game {
   display: none;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   flex: 1;
 }
 .marker {
@@ -71,18 +105,21 @@ input:focus {
 }
 .stats {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 28px;
+  width: 100vw;
+  font-weight: bold;
 }
 .first,
 .second {
   display: flex;
-  gap: 4px;
+  gap: 25px;
+  padding: 8px;
+  align-items: center;
+  border-radius: 16px;
 }
-.p1,
-.p2 {
-  border-radius: 6px;
-  width: 100px;
-}
+
 .one,
 .two,
 .three {
@@ -104,17 +141,38 @@ input:focus {
 .nine {
   border-right: none;
 }
-
-.restart {
-  background-color: #0f766e;
-  color: white;
-  font-size: large;
-  padding: 20px;
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 390px;
+  gap: 20px;
+}
+.restart,
+.back {
+  background-color: #d97706;
+  font-size: 24px;
+  width: 200px;
+  height: 50px;
   margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  transition: 0.5s;
+  font-weight: bold;
+  color: white;
+}
+.restart:hover {
+  background-color: #ce7714;
+}
+.back {
+  background-color: #3b82f6;
+}
+.back:hover {
+  background-color: #3776da;
 }
 .back,
 .restart,
 .marker,
-.start {
+.start,
+input[type="radio"] {
   cursor: pointer;
 }
