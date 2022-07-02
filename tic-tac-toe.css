@@ -27,10 +27,11 @@ form {
 
 .radio {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 .modes {
   display: none;
+  transition: opacity 1s ease-out;
 }
 .player {
   display: flex;
@@ -53,6 +54,17 @@ input[type="text"] {
   display: flex;
   justify-content: space-around;
 }
+select {
+  width: 150px;
+  padding: 5px 35px 5px 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  height: 34px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url(images/menu-down.png) 96% / 15% no-repeat #eee;
+}
 label {
   font-size: 18px;
 }
@@ -68,7 +80,6 @@ input[type="radio"]:focus {
   width: 150px;
   height: 45px;
   border-radius: 10px;
-  align-self: center;
   font-size: 18px;
 }
 .start:hover {

@@ -9,18 +9,22 @@ const game = (() => {
   const p2 = document.querySelector(".p2");
   const p1Wins = document.querySelector(".p1-wins");
   const p2Wins = document.querySelector(".p2-wins");
+  const p1Mode = document.querySelector("#P1-Modes");
+  const p2Mode = document.querySelector("#P2-Modes");
+
   const board = {
     gameBoard: ["", "", "", "", "", "", "", "", ""],
     eventMarkerPlaced: marker.forEach((box) => {
       box.addEventListener("click", () => {
-        if (box.textContent || checkWinner()) return;
+        if (box.textContent || checkWinner(board.gameBoard)) return;
         const objectAI = players[players.findIndex((x) => x.type === "AI")];
         if (objectAI && objectAI.marker === (lastTurn === "X" ? "O" : "X"))
           return;
-
+        if (players[0].type === "AI" && players[1].type === "AI") return;
         let boxNum = Number(box.id) - 1;
         makeMove(boxNum);
-        if (objectAI && objectAI.type) AIMove();
+        if (objectAI && objectAI.type)
+          AIMove(objectAI.marker === "X" ? p1Mode.value : p2Mode.value);
       });
     }),
   };
@@ -109,12 +113,12 @@ const game = (() => {
       marker[divNum].textContent = board.gameBoard[divNum];
     }
     highlightTurn();
-    if (checkWinner() === "Draw") {
+    if (checkWinner(board.gameBoard) === "Draw") {
       turn.textContent = "Draw!";
       return;
     }
-
-    if (checkWinner() === true) {
+    const markers = { X: "X", O: "O" };
+    if (checkWinner(board.gameBoard) in markers) {
       if (lastTurn === "X") {
         turn.textContent = `${players[0].name} is the winner!`;
         p1Wins.textContent = `${(+p1Wins.textContent + 1).toString()}`;
@@ -125,18 +129,71 @@ const game = (() => {
       p2Wins.textContent = `${(+p2Wins.textContent + 1).toString()}`;
     }
   }
-  async function AIMove() {
-    if (checkWinner()) return;
-    let randomBox = Math.floor(Math.random() * 9);
-    while (board.gameBoard[randomBox]) {
-      randomBox = Math.floor(Math.random() * 9);
-    }
-    await sleep(600);
 
-    makeMove(randomBox);
-    if (players[0].type === "AI" && players[1].type === "AI") AIMove();
+  async function AIMove(mode) {
+    let boxToPlaceMarker;
+    if (checkWinner(board.gameBoard)) return;
+
+    if (mode === "Easy") boxToPlaceMarker = easyMode();
+    if (mode === "Medium") boxToPlaceMarker = mediumMode(board.gameBoard);
+    if (mode === "Impossible") boxToPlaceMarker = impossibleMode();
+
+    await sleep(500);
+    makeMove(boxToPlaceMarker);
+    if (players[0].type === "AI" && players[1].type === "AI") {
+      AIMove(lastTurn === "X" ? p2Mode.value : p1Mode.value);
+    }
+  }
+  function mediumMode(board) {
+    const currentTurn = lastTurn === "X" ? "O" : "X";
+    let move = aboutToWin(board, currentTurn) || aboutToWin(board, lastTurn);
+    return move !== undefined ? move : easyMode();
+  }
+  const impossibleMode = () => getBestMove(board.gameBoard);
+
+  function getBestMove(board) {
+    const currentTurn = lastTurn === "X" ? "O" : "X";
+    const turnsPlayed = board.filter((a) => a == lastTurn).length;
+    console.log(turnsPlayed);
+    let bestMove;
+    const diag = (board[0] && board[8]) || (board[2] && board[6]);
+    const corners = board[0] || board[8] || board[2] || board[6];
+    const midCorner = board[1] || board[5] || board[7] || board[3];
+    bestMove = aboutToWin(board, currentTurn) || aboutToWin(board, lastTurn);
+    if (turnsPlayed == 0) bestMove = 0;
+    if (turnsPlayed == 1 && currentTurn === "X" && board[4]) bestMove = 8;
+    if (turnsPlayed == 1 && currentTurn === "X") {
+      bestMove = !board[2] ? 2 : board[6] ? 6 : 8;
+    }
+    if (turnsPlayed == 1 && currentTurn === "O" && corners) bestMove = 4;
+    if (turnsPlayed == 2 && currentTurn === "O" && diag) bestMove = 3;
+    if (turnsPlayed == 1 && currentTurn === "O" && board[4]) bestMove = 2;
+    if (turnsPlayed == 1 && currentTurn === "O" && midCorner) {
+      bestMove = board[5] ? 3 : board[3] ? 5 : board[1] ? 7 : 1;
+    }
+    if (turnsPlayed == 2 && !corners && currentTurn === "O") {
+      bestMove = (board[3] || board[1]) === lastTurn ? 0 : board[5] ? 2 : 6;
+    }
+    return bestMove !== undefined ? bestMove : easyMode();
+  }
+  function aboutToWin(board, turn) {
+    for (let i = 0; i < 9; i++) {
+      if (board[i] != "") continue;
+      board[i] = turn;
+      let isWinner = checkWinner(board);
+      board[i] = "";
+      if (isWinner) return i;
+    }
+  }
+  function easyMode() {
+    randomMove = Math.floor(Math.random() * 9);
+    while (board.gameBoard[randomMove]) {
+      randomMove = Math.floor(Math.random() * 9);
+    }
+    return randomMove;
   }
 
+  const checkGameOver = (board) => !board.includes("");
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   function makeMove(boxNum) {
@@ -164,7 +221,7 @@ const game = (() => {
     first.style.backgroundColor = second.style.backgroundColor = "#f7f7f7";
     first.style.boxShadow = second.style.boxShadow = "none";
 
-    if (checkWinner()) return;
+    if (checkWinner(board.gameBoard)) return;
 
     if (lastTurn === "O") {
       first.style.backgroundColor = "#fca5a5";
@@ -180,14 +237,15 @@ const game = (() => {
     board.gameBoard = ["", "", "", "", "", "", "", "", ""];
     turn.textContent = `${players[0].name}'s turn`;
     lastTurn = "O";
-    if (players[0].type === "AI") AIMove();
+
+    if (players[0].type === "AI") AIMove(p1Mode.value);
     render();
   }
 
-  function checkWinner() {
-    let firstCol = board.gameBoard.slice(0, 3);
-    let secondCol = board.gameBoard.slice(3, 6);
-    let thirdCol = board.gameBoard.slice(6, 9);
+  function checkWinner(board) {
+    let firstCol = board.slice(0, 3);
+    let secondCol = board.slice(3, 6);
+    let thirdCol = board.slice(6, 9);
     const columns = [firstCol, secondCol, thirdCol];
     const rows = [
       [firstCol[0], secondCol[0], thirdCol[0]],
@@ -198,26 +256,23 @@ const game = (() => {
       [firstCol[0], secondCol[1], thirdCol[2]],
       [firstCol[2], secondCol[1], thirdCol[0]],
     ];
-    if (threeInARow(columns) || threeInARow(rows) || threeInARow(diagonals)) {
-      return true;
-    }
-    if (!board.gameBoard.includes("")) return "Draw";
+    if (threeInARow(columns)) return threeInARow(columns);
+    if (threeInARow(rows)) return threeInARow(rows);
+    if (threeInARow(diagonals)) return threeInARow(diagonals);
+    if (checkGameOver(board)) return "Draw";
+    return false;
   }
-
   function threeInARow(array) {
     for (let item of array) {
-      if (onlyContains(item)) {
-        return true;
-      }
+      if (item.includes("")) continue;
+      const sorted = item.sort();
+      const onlyContains = sorted[0] == sorted[sorted.length - 1];
+      if (onlyContains) return item[0];
     }
-  }
-  function onlyContains(array) {
-    if (array.includes("")) return;
-    array.sort();
-    return array[0] == array[array.length - 1];
   }
   const getPlayersInfo = () => {
     for (let player of players) console.log(player);
   };
-  return { restart, checkWinner, getPlayersInfo };
+  const getBoard = () => board.gameBoard;
+  return { restart, checkWinner, getPlayersInfo, getBoard };
 })();
