@@ -165,22 +165,27 @@ const game = (() => {
   function getBestMove(board) {
     const currentTurn = lastTurn === "X" ? "O" : "X";
     const turnsPlayed = board.filter((a) => a == lastTurn).length;
-    const diag = (board[0] && board[8]) || (board[2] && board[6]);
+    const diag =
+      (board[0] && board[8]) == currentTurn ||
+      (board[2] && board[6]) == currentTurn;
+
     const corners = board[0] || board[8] || board[2] || board[6];
     const midCorner = board[1] || board[5] || board[7] || board[3];
     let bestMove;
     bestMove = aboutToWin(board, currentTurn) || aboutToWin(board, lastTurn);
+    const isO = currentTurn === "O";
     if (turnsPlayed == 0) bestMove = 0;
-    if (turnsPlayed == 1 && currentTurn === "X" && board[4]) bestMove = 8;
-    if (turnsPlayed == 1 && currentTurn === "X") {
+    if (turnsPlayed == 1 && !isO && board[4]) bestMove = 8;
+    if (turnsPlayed == 1 && !isO) {
       bestMove = !board[2] ? 2 : board[6] ? 6 : 8;
     }
-    if (turnsPlayed == 1 && currentTurn === "O" && corners) bestMove = 4;
-    if (turnsPlayed == 2 && currentTurn === "O" && diag) bestMove = 3;
-    if (turnsPlayed == 1 && currentTurn === "O" && board[4]) bestMove = 2;
-    if (turnsPlayed == 1 && currentTurn === "O" && midCorner) {
+    if (turnsPlayed == 1 && isO && corners) bestMove = 4;
+    if (turnsPlayed == 2 && isO && diag) bestMove = 3;
+    if (turnsPlayed == 1 && isO && board[4]) bestMove = 0;
+    if (turnsPlayed == 1 && isO && midCorner) {
       bestMove = board[5] ? 3 : board[3] ? 5 : board[1] ? 7 : 1;
     }
+    if (turnsPlayed == 2 && isO && board[4] && board[8]) bestMove = 6;
     if (turnsPlayed == 2 && !corners && currentTurn === "O") {
       bestMove = (board[3] || board[1]) === lastTurn ? 0 : board[5] ? 2 : 6;
     }
